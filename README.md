@@ -14,7 +14,7 @@ The figure shows the manuscript architecture. Its full-length RNA branch is labe
 
 ## Quick start
 
-The standard evaluation requires the three R-SIM tables, cached features, original fold assignments and five trained checkpoints. This source release includes the code and architecture figure. Place the experiment files as described in the data and checkpoint directories before running these commands with Python 3.10 or later.
+The repository includes the original fold assignments, feature tensors and five trained checkpoints. To evaluate them, clone the repository and run the following commands with Python 3.10 or later.
 
 ```bash
 git clone https://github.com/hongyuyang224-sudo/MGCA-Net.git
@@ -28,7 +28,7 @@ python evaluate.py
 
 ## Standard five-fold results
 
-The R-SIM evaluation contains 1,328 labeled pairs spanning 289 RNAs and 738 ligands. Each pair appears in exactly one test fold. The values below are means across the five test folds, reproduced with the archived checkpoints using CUDA mixed precision.
+The R-SIM evaluation contains 1,328 labeled pairs spanning 289 RNAs and 738 ligands. Each pair appears in exactly one test fold. The values below are means across the five test folds, reproduced with the supplied checkpoints using CUDA mixed precision.
 
 | RMSE ↓ | MAE ↓ | Pearson r ↑ | Spearman ρ ↑ |
 | ---: | ---: | ---: | ---: |
@@ -54,10 +54,10 @@ The ensemble includes models trained on some of the scored pairs. Use `evaluate.
 
 ## Optional feature extraction
 
-The reproduction commands above use the cached features and run without downloading pretrained encoders. For separate extraction experiments, run the following from the repository root.
+The reproduction commands above use the included features and run without downloading pretrained encoders. For separate extraction experiments, run the following from the repository root.
 
 - For RNA-FM, install the upstream `fm` package, place its `RNA-FM_pretrained.pth` file in `models/`, and run `python preprocess/extract_rna_fm_embedding.py`. [RNA-FM](https://github.com/ml4bio/RNA-FM)
-- For ligand features, install RDKit and `transformers==4.41.2`, run `python preprocess/brics.py`, then `python preprocess/extract_molformer_embedding.py`. The script loads the Hugging Face model and its custom modeling code. A fresh extraction completed for all 738 ligands using Transformers 4.41.2. The resulting vectors differed from the historical tensors, including after matching fragments by SMILES. The exact conditions needed to regenerate the historical ligand vectors remain unverified. Use the historical feature cache for the checkpoint evaluation. [MoLFormer weights](https://huggingface.co/ibm/MoLFormer-XL-both-10pct)
+- For ligand features, install RDKit and `transformers==4.41.2`, run `python preprocess/brics.py`, then `python preprocess/extract_molformer_embedding.py`. The script loads the Hugging Face model and its custom modeling code. A fresh extraction completed for all 738 ligands using Transformers 4.41.2. The resulting vectors differed from the historical tensors, including after matching fragments by SMILES. The exact conditions needed to regenerate the historical ligand vectors remain unverified. Use the included feature cache for the checkpoint evaluation. [MoLFormer weights](https://huggingface.co/ibm/MoLFormer-XL-both-10pct)
 - For the alternative full-length encoder, install RiNALMo with its upstream dependencies and run `python preprocess/extract_rinalmo_embedding.py`. [RiNALMo](https://github.com/lbcb-sci/RiNALMo)
 
 Extraction outputs go to `data/processed/extracted/`. The standard evaluation always reads the archived features through `create_data.py`.
